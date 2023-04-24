@@ -19,6 +19,10 @@ allprojects {
         mavenCentral(){
         allowInsecureProtocol = true
         }
+        maven {
+            url "http://maven.usehover.com/releases"
+            allowInsecureProtocol = true
+        }
     }
 }
 

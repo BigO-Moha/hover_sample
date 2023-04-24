@@ -83,15 +83,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  hover_ussd:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: c1ad83fc64148f1d60e93c003068fa0152ba6359
-      url: "https://github.com/BigO-Moha/hover_som.git"
-    source: git
-    version: "1.0.0"
   js:
     dependency: transitive
     description:
@@ -203,4 +194,3 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.19.4 <3.0.0"
-  flutter: ">=1.20.0"

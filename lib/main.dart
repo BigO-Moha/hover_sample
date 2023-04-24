@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:hover_ussd/hover_ussd.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  HoverUssd.initialize();
+
   runApp(MyApp());
 }
 
@@ -14,7 +13,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final HoverUssd _hoverUssd = HoverUssd();
+  static const _hover = const MethodChannel('kikoba.co.tz/hover');
+  String _ActionResponse = 'Waiting for Response...';
+  Future<dynamic> sendMoney(var number, money) async {
+    var sendMap = <String, dynamic>{
+      'number': number,
+      'money': money,
+    };
+// response waits for result from java code
+    String? response = "";
+    try {
+      final String? result = await _hover.invokeMethod('sendMoney', sendMap);
+      response = result;
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+    _ActionResponse = response!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +42,17 @@ class _MyAppState extends State<MyApp> {
           child: Row(
             children: [
               TextButton(
-                onPressed: () {
-                  _hoverUssd.sendUssd(
-                      actionId: "ba92c7e7",
-                      extras: {'number': '615379711', 'money': '1'});
+                onPressed: () async {
+                  sendMoney("615379757", "1");
                 },
                 child: Text("Start Trasaction"),
               ),
-              StreamBuilder(
-                stream: _hoverUssd.getUssdTransactionState,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.data == TransactionState.succesfull) {
-                    return Text("succesfull");
-                  } else if (snapshot.data ==
-                      TransactionState.actionDowaloadFailed) {
-                    return Text("action download failed");
-                  } else if (snapshot.data == TransactionState.failed) {
-                    return Text("failed");
-                  }
-                  return Text("no transaction");
-                },
+              SizedBox(
+                height: 18,
               ),
+              Center(
+                child: Text(_ActionResponse),
+              )
             ],
           ),
         ),
